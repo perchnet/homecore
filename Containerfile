@@ -3,7 +3,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-ARG BASE_IMAGE
+ARG BASE_IMAGE=ghcr.io/ublue-os/ucore:stable-zfs
 FROM ${BASE_IMAGE:-ghcr.io/ublue-os/ucore:stable-zfs}
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
