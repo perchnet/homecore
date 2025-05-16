@@ -19,7 +19,7 @@ def load_latest_version():
 
 def uses_systemd():
 	# In case we're building a systemd-based environment from within in a container environment, allow forcing the use of systemd
-	force = sys.argv.count("--systemd") > 0
+	force = sys.argv.count("--force") > 0
 	if force:
 		return force
 	# First check if systemctl is an available command, then check if systemd is the init system
