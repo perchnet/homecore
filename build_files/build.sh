@@ -12,7 +12,7 @@ set -ouex pipefail
 # this installs a package from fedora repos
 dnf5 install -y zsh
 
-python3 /ctx/setup-periphery.py
+python3 /ctx/setup-periphery.py --force --factory
 
 # Use a COPR Example:
 #
