@@ -18,6 +18,10 @@ def load_latest_version():
 	return json.load(urllib.request.urlopen("https://api.github.com/repos/moghtech/komodo/releases/latest"))["tag_name"]
 
 def uses_systemd():
+	# In case we're building a systemd-based environment from within in a container environment, allow forcing the use of systemd
+	force = sys.argv.count("--systemd") > 0
+	if force:
+		return force
 	# First check if systemctl is an available command, then check if systemd is the init system
 	return shutil.which("systemctl") is not None and os.path.exists("/run/systemd/system/")
 
