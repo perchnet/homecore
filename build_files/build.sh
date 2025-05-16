@@ -22,7 +22,7 @@ tee /usr/lib/tmpfiles.d/periphery-default-config.conf <<<'C /etc/komodo/peripher
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
 
-if find /etc ; then
+if find /usr/etc ; then
 echo AAAAAAAAAAAAAAAA
 fi
 #### Example for enabling a System Unit File
