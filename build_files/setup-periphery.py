@@ -29,6 +29,7 @@ def load_paths():
 	home_dir = os.environ['HOME']
 	# Checks if setup.py is passed --user arg
 	user_install = sys.argv.count("--user") > 0
+	factory_install = sys.argv.count("--factory") > 0
 	if user_install:
 		return [
 			True,
@@ -37,9 +38,21 @@ def load_paths():
 			# binary location
 			f'{home_dir}/.local/bin',
 			# config location
-	 		f'{home_dir}/.config/komodo',
+			f'{home_dir}/.config/komodo',
 			# service file location
-	 		f'{home_dir}/.config/systemd/user',
+			f'{home_dir}/.config/systemd/user',
+		]
+	elif factory_install:
+		return [
+			False,
+			# home_dir
+			home_dir,
+			# binary location
+			"/usr/bin",
+			# config location
+			"/etc/komodo",
+			# service file location
+			"/usr/lib/systemd/system",
 		]
 	else:
 		return [
@@ -49,9 +62,9 @@ def load_paths():
 			# binary location
 			"/usr/local/bin",
 			# config location
-	 		"/etc/komodo",
+			"/etc/komodo",
 			# service file location
-	 		"/etc/systemd/system",
+			"/etc/systemd/system",
 		]
 
 def copy_binary(user_install, bin_dir, version):
@@ -91,7 +104,7 @@ def copy_config(config_dir):
 	if os.path.isfile(config_file):
 		print("config already exists, skipping...")
 		return
-	
+
 	print(f'creating config at {config_file}')
 
 	# ensure config dir exists
@@ -116,9 +129,9 @@ def copy_service_file(home_dir, bin_dir, config_dir, service_dir, user_install):
 		else:
 			print("service file already exists, skipping...")
 			return
-	
+
 	print(f'creating service file at {service_file}')
-	
+
 	# ensure service_dir exists
 	if not os.path.isdir(service_dir):
 		os.makedirs(service_dir)
@@ -142,7 +155,7 @@ def copy_service_file(home_dir, bin_dir, config_dir, service_dir, user_install):
 	if user_install:
 		user = " --user"
 	os.popen(f'systemctl{user} daemon-reload')
-	
+
 def main():
 	print("=====================")
 	print(" PERIPHERY INSTALLER ")
@@ -154,7 +167,7 @@ def main():
 
 	version = load_version()
 	[user_install, home_dir, bin_dir, config_dir, service_dir] = load_paths()
- 
+
 	print(f'version: {version}')
 	print(f'user install: {user_install}')
 	print(f'home dir: {home_dir}')
@@ -174,8 +187,11 @@ def main():
 	if user_install:
 		user = " --user"
 
-	print("starting periphery...")
-	print(os.popen(f'systemctl{user} start periphery').read())
+	print("enabling periphery service...")
+	print(os.popen(f'systemctl{user} enable periphery').read())
+	if sys.argv.count("--factory") == 0:
+		print("starting periphery...")
+		print(os.popen(f'systemctl{user} start periphery').read())
 
 	print("Finished periphery setup.\n")
 	print(f'Note. Use "systemctl{user} status periphery" to make sure periphery is running')
