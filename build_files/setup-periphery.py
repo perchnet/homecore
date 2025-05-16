@@ -50,7 +50,7 @@ def load_paths():
 			# binary location
 			"/usr/bin",
 			# config location
-			"/etc/komodo",
+			"/usr/lib/komodo",
 			# service file location
 			"/usr/lib/systemd/system",
 		]
